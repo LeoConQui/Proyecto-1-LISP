@@ -60,8 +60,8 @@ public class Lisp {
     }
 
     /*
-     * Evaluar la operacion 
-     */
+     * Arreglar está operación!!!!
+     
     public static int evaluarOp(Lectura node) {
         if (node.lista.isEmpty()) {
             try {
@@ -78,5 +78,6 @@ public class Lisp {
             throw new IllegalArgumentException("Expresión no válida: " + node.value);
         }
     }
+    */
 
 }
