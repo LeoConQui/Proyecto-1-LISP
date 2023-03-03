@@ -1,33 +1,63 @@
 public class Stack<T> implements IStack<T> {
+    private Node<T> top;
+	int count;
+	
+	public Stack() {
+		top = null;
+		count = 0;
+	}
+	
+	@Override
+	public int count() {
+		return count;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return count() == 0;
+	}
+
+	@Override
+	public void push(T value) {
+		Node<T> newNode = new Node<T>(value);
+		
+		if (isEmpty()) {
+			top = newNode;
+		} else {
+			newNode.setNext(top);
+			top = newNode;
+		}
+		
+		count++;
+	}
 
     @Override
-    public int count() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'count'");
+    public T top() {
+        if (isEmpty()) {
+			return null;
+		} else {
+			return top.getValue();
+		}
     }
 
     @Override
-    public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+    public T pop() {
+        if (isEmpty()) {
+			return null;
+		} else {
+			Node<T> temp = top;
+			top = top.getNext();
+			count--;
+			
+			return temp.getValue();
+		}
     }
 
     @Override
-    public void push(T value) {
+    public T set() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'push'");
+        throw new UnsupportedOperationException("Unimplemented method 'set'");
     }
 
-    @Override
-    public T pull() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pull'");
-    }
-
-    @Override
-    public T peek() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'peek'");
-    }
     
 }

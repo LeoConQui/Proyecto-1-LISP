@@ -5,7 +5,10 @@ public interface IStack<T> {
 	
 	void push(T value);
 	
-	T pull();
+	T top();
 	
-	T peek();
+	T pop();
+
+	T set();
+
 }
