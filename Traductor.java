@@ -15,52 +15,55 @@ public class Traductor {
      * @param expresion es la expresion regular
      * @return un string que indica que es lo que indica la expresion regular
      */
-    public String Traducir(String expresion){
+    public String decode(String expresion){
     
-        /*revisar si es una asigncion de variable
-        */
-        if(Evaluar("^[(][ ]*setq[ ]+[a-zA-Z0-9]+[ ]+[0-9]+[ ]*[)]$",expresion) || Evaluar("^[(][ ]*setq[ ]+[:alnum:]+[ ]+['][a-zA-Z0-9]+['][ ]*[)]$",expresion)){
+        // verificamos si se esta declarando una variable
+        // usamos el metodo evaluate para ver si encuentra un match
+        if (evaluate("^[()][ ]*setq[ ]+[a-zA-Z0-9]+[ ]+[0-9]+[ ]+*[)]$", expresion)) {
+            // retornamos que la expresion es un new var
             return "NEWVAR";
         }
-        if(Evaluar("^[(][ ]*end[ ]*[)]$",expresion)){
+
+        // verificamos si es el comando end
+        if (evaluate("^[(][ ]*end[ ]*[)]$", expresion)) {
+            // retornamos que es end
             return "END";
         }
-        if(Evaluar("^[(][ ]*print[ ]+[a-z][ ]*[)]$",expresion)|| evaluate("^[(][ ]*print[ ]+[0-9][ ]*[)]$",expresion) ){
+
+        // verficamos si la expresion es un print numerico o variable
+        // primero verificamos si se desea imprimir un numero, despues una variable
+        if (evaluate("^[(][ ]*print[ ]+[0-9][ ]*[)]$", expresion)|| evaluate("^[(][ ]*print[ ]+[a-zA-z0-9][ ][)]$", expresion)) {
             return "PRINT";
         }
-        if(Evaluar("^[(][ ]*print[ ]+['][a-zA-Z0-9]+['][ ]*[)]$",expresion)){
-             return "PRINT";
+
+        // verificamos si la expresion es un print de string
+        if (evaluate("^[(][ ]*print[ ]+['][a-zA-Z0-9]+['][ ]*[)]$", expresion)) {
+            return "PRINT";
         }
-        if (Evaluar("^[(][ ]*[+][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$",expresion)){
-            return "SUM";
+
+        // verificamos si la expresion es una suma
+        if (evaluate("^[(][ ]*[+][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+            return"ADD";
         }
-        if (Evaluat("^[(][ ]*[-][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$",expresion)){
-            return "RESTA";
-        }
-        if (Evaluar("^[(][ ]*[*][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$",expresion)){
-            return "MUL";
-        }
-        if (Evaluar("^[(][ ]*[/][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$",expresion)){
-            return "DIV";
-        }
-        if (Evaluar("^[(][ ]*equal[ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$",expresion)){
-            return "DIV";
-        }
-          return null;
+
+        // verificamos 
     }
     
 
     
     
     /**
-     * Evaluar es un metodo que compila la expresion regular y hace match con la expresion que se pasa como parametro. Declaramos static este metodo
+     * evaluate es un metodo que compila la expresion regular y hace match con la expresion que se pasa como parametro. Declaramos static este metodo
      * @param regex
      * @param expresion
      * @return
      */
-    private static boolean Evaluar(String regex, String expresion) {
+    private static boolean evaluate(String regex, String expresion) {
+        // creamos un patron con el flag case insensitive
 		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        // creamos un matcher con la expresion
 	    Matcher matcher = pattern.matcher(expresion);
+        // buscamos el match
 	    return matcher.find();
 	}
    
