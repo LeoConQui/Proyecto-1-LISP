@@ -46,7 +46,25 @@ public class Traductor {
             return"ADD";
         }
 
-        // verificamos 
+        // verificamos si la expresion es una resta 
+        if (evaluate("^[(][ ]*[-][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+            return "DIF";
+        }
+
+        // verificamos si es una multiplicacion
+        if (evaluate("^[(][ ]*[*][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+            return "MUL";
+        }
+
+        // verficiamos si es una division
+        if (evaluate("^[(][ ]*[/][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+            return "DIV";
+        }
+
+        // verficamos si es un quote 
+        if (evaluate("^[(][ ]*(quote)[ ]*([(].+[)])[ ]*[)]$", expresion)) {
+            return "QUT";
+        }
     }
     
 
