@@ -59,25 +59,5 @@ public class Lisp {
         return stack.top();
     }
 
-    /*
-     * Arreglar está operación!!!!
-     
-    public static int evaluarOp(Lectura node) {
-        if (node.lista.isEmpty()) {
-            try {
-                return Integer.parseInt(node.value);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Símbolo no válido: " + node.value);
-            }
-        } else if (node.lista.size() == 2) {
-            FuncionesAri op = getOperacion(node.value);
-            int a = evaluarOp(node.lista.get(0));
-            int b = evaluarOp(node.lista.get(1));
-            return op.evaluar(a, b);
-        } else {
-            throw new IllegalArgumentException("Expresión no válida: " + node.value);
-        }
-    }
-    */
 
 }

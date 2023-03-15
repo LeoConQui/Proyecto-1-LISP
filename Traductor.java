@@ -67,8 +67,6 @@ public class Traductor {
         }
     }
     
-
-    
     
     /**
      * evaluate es un metodo que compila la expresion regular y hace match con la expresion que se pasa como parametro. Declaramos static este metodo
