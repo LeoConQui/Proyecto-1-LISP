@@ -1,63 +1,63 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
 
+/* 
+ * Creación de ambiente Lisp
+ */
 public class Lisp {
-    static Map<String, FuncionesAri> operations = new HashMap<>();
+    private FuncionesAri evaluator;
+    private VarFactory varFactory;
+    private Traductor traductor;
 
-    public static FuncionesAri getOperacion(String symbol) {
-        switch (symbol) {
-            case "+":
-                return FuncionesAri.SUMA;
-            case "-":
-                return FuncionesAri.RESTA;
-            default:
-                throw new IllegalArgumentException("Operador desconocido: " + symbol);
-        }
+    // COnstructor de Lisp
+    public Lisp() {
+        this.evaluador = new FuncionesAri();
+        this.varFactory = new VarFactory();
+        this.traductor = new Traductor();
     }
 
+    // Método que para correr las expresiones Lisp 
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        String input;
 
-    public static Lectura parse(String input) {
-        Stack<Lectura> stack = new Stack<>();
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            if (Character.isDigit(c)) {
-                // Si el carácter es un número, se agrega un nuevo nodo
-                // a la pila con el valor correspondiente.
-                int j = i;
-                while (j < input.length() && Character.isDigit(input.charAt(j))) {
-                    j++;
-                }
-                int value = Integer.parseInt(input.substring(i, j));
-                stack.push(new Lectura(Integer.toString(value)));
-                i = j - 1;
-            } else if (c == '(') {
-                // Si el carácter es un paréntesis izquierdo, se crea un
-                // nuevo nodo en la pila y se continúa con el análisis.
-                stack.push(new Lectura(null));
-            } else if (c == ')') {
-                // Si el carácter es un paréntesis derecho, se construye
-                // un nuevo subárbol a partir de los nodos en la pila.
-                Lectura node = stack.pop();
-                Lectura parent = stack.top();
-                while (parent.value != null) {
-                    node.lista.add(parent);
-                    parent = stack.pop();
-                }
-                stack.pop(); // Sacar el paréntesis izquierdo de la pila.
-                stack.push(node);
-            } else if (c == '+' || c == '-' || c == '*' || c == '/') {
-                // Si el carácter es un operador, se crea un nuevo nodo en la
-                // pila con el operador correspondiente.
-                String d = String.valueOf(c);
-                stack.push(new Lectura(d));
+        System.out.println("Bienvenido al ambiente Lisp en Java. Ingresa tus expresiones:");
+
+        while (true) {
+            input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("(end)")) {
+                break;
+            }
+
+            String decodedExpression = traductor.decode(input);
+
+            switch (decodedExpression) {
+                case "NEWVAR":
+                    Variable<?> newVar = varFactory.VariableCreator(input);
+                    if (newVar != null) {
+                        evaluator.setVariable(newVar.getName(), newVar.getValue());
+                    }
+                    break;
+
+                case "PRINT":
+                    Object printResult = evaluador.evaluate(input);
+                    System.out.println(printResult);
+                    break;
+
+                case "ADD":
+                case "DIF":
+                case "MUL":
+                case "DIV":
+                    Object mathResult = evaluator.evaluate(input);
+                    System.out.println("Resultado: " + mathResult);
+                    break;
+
+                default:
+                    System.out.println("Expresión inválida.");
+                    break;
             }
         }
 
-        // El resultado final es el nodo en la cima de la pila.
-        return stack.top();
+        scanner.close();
     }
-
-
 }
