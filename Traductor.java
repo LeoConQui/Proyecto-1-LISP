@@ -19,7 +19,7 @@ public class Traductor {
     
         // verificamos si se esta declarando una variable
         // usamos el metodo evaluate para ver si encuentra un match
-        if (evaluate("^[()][ ]*setq[ ]+[a-zA-Z0-9]+[ ]+[0-9]+[ ]+*[)]$", expresion)) {
+        if (evaluate("^[()][ ]*setq[ ]+[a-zA-Z0-9]+[ ]+[0-9]+[ ]*[)]$", expresion)) {
             // retornamos que la expresion es un new var
             return "NEWVAR";
         }
@@ -42,22 +42,22 @@ public class Traductor {
         }
 
         // verificamos si la expresion es una suma
-        if (evaluate("^[(][ ]*[+][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+        if (evaluate("^[(][+][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
             return"ADD";
         }
 
         // verificamos si la expresion es una resta 
-        if (evaluate("^[(][ ]*[-][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+        if (evaluate("^[(][-][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
             return "DIF";
         }
 
         // verificamos si es una multiplicacion
-        if (evaluate("^[(][ ]*[*][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+        if (evaluate("^[(][*][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
             return "MUL";
         }
 
         // verficiamos si es una division
-        if (evaluate("^[(][ ]*[/][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
+        if (evaluate("^[(][/][ ]+[([a-z]+|[0-9]+)[ ]+([a-z]+|[0-9]+)]+[ ]*[)]$", expresion)) {
             return "DIV";
         }
 
@@ -65,8 +65,11 @@ public class Traductor {
         if (evaluate("^[(][ ]*(quote)[ ]*([(].+[)])[ ]*[)]$", expresion)) {
             return "QUT";
         }
+
+        // ninguna expresión regular coincide con la expresión
+        return "INVALID_EXPRESSION";
     }
-    
+  
     
     /**
      * evaluate es un metodo que compila la expresion regular y hace match con la expresion que se pasa como parametro. Declaramos static este metodo

@@ -35,4 +35,9 @@
     return this.content;
    }
 
+   // get del atributo name
+   public String getName() {
+    return this.name;
+}
+
 }

@@ -4,7 +4,7 @@ import java.util.Scanner;
  * Creación de ambiente Lisp
  */
 public class Lisp {
-    private FuncionesAri evaluator;
+    private FuncionesAri evaluador;
     private VarFactory varFactory;
     private Traductor traductor;
 
@@ -33,11 +33,11 @@ public class Lisp {
 
             switch (decodedExpression) {
                 case "NEWVAR":
-                    Variable<?> newVar = varFactory.VariableCreator(input);
-                    if (newVar != null) {
-                        evaluator.setVariable(newVar.getName(), newVar.getValue());
-                    }
-                    break;
+                Variable<Object> newVar = varFactory.VariableCreator(input);
+                if (newVar != null) {
+                    evaluador.setVariable(newVar.getName(), newVar.getValue());
+                }
+                break;
 
                 case "PRINT":
                     Object printResult = evaluador.evaluate(input);
@@ -48,7 +48,7 @@ public class Lisp {
                 case "DIF":
                 case "MUL":
                 case "DIV":
-                    Object mathResult = evaluator.evaluate(input);
+                    Object mathResult = evaluador.evaluate(input);
                     System.out.println("Resultado: " + mathResult);
                     break;
 
