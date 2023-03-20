@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.junit.Test;
 
 
-public class test {
+public class Pruebas {
 
     @Test
 	public void Evaluar(){
@@ -14,3 +14,4 @@ public class test {
         MergeSort.mergeSort(actual, actual.length);
         assertArrayEquals(expected, actual);
 	}
+}
