@@ -48,7 +48,7 @@ public class Lisp {
                 case "DIF":
                 case "MUL":
                 case "DIV":
-                    Object mathResult = evaluador.evaluate(input);
+                    Double mathResult = (Double) evaluador.evaluate(input);
                     System.out.println("Resultado: " + mathResult);
                     break;
 

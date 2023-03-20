@@ -1,90 +1,162 @@
 import java.util.*;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Map;
 import java.util.Stack;
 
 public class FuncionesAri {
+    private static Map<String, Object> variables;
 
-    private static Map<String, Double> variables = new HashMap<>();
-
-    private static final Pattern numberPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-
-    public static double evaluate(String expr) {
-        Stack<Double> stack = new Stack<>();
-        String[] tokens = expr.split("\\s+(?=[^()]*\\b)|(?<=\\b[^()]+)\\s+");
-        int i = 0;
-
-        while (i < tokens.length) {
-            String token = tokens[i];
-
-            if (token.equals("(")) {
-                // Encontró un paréntesis de apertura, llame recursivamente a evaluate para analizar la subexpresión entre paréntesis
-                int j = i + 1;
-                int count = 1;
-                while (count > 0) {
-                    if (tokens[j].equals("(")) {
-                        count++;
-                    } else if (tokens[j].equals(")")) {
-                        count--;
-                    }
-                    j++;
-                }
-                String[] subexprTokens = Arrays.copyOfRange(tokens, i + 1, j - 1);
-                String subexpr = String.join(" ", subexprTokens);
-                double result = evaluate(subexpr);
-                stack.push(result);
-                i = j;
-            } else if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
-                // Encontró un operador, pop dos operandos de la pila y evalúe la operación correspondiente
-                char operator = token.charAt(0);
-                double operand2 = stack.pop();
-                double operand1 = stack.pop();
-                double result = 0.0;
-
-                switch (operator) {
-                    case '+':
-                        result = operand1 + operand2;
-                        break;
-                    case '-':
-                        result = operand1 - operand2;
-                        break;
-                    case '*':
-                        result = operand1 * operand2;
-                        break;
-                    case '/':
-                        result = operand1 / operand2;
-                        break;
-                }
-
-                stack.push(result);
-            } else {
-                // El token es un valor, agregarlo a la pila
-                if (variables.containsKey(token)) {
-                    double operand = variables.get(token);
-                    stack.push(operand);
-                } else {
-                    try {
-                        double operand = Double.parseDouble(token);
-                        stack.push(operand);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Token inválido: " + token);
-                    }
-                }
+    public Object evaluate(String expression) {
+        Object result = null;
+        List<Object> operands = new ArrayList<>();
+        String operator = null;
+    
+        // decode the expression
+        List<String> tokens = decodeExpression(expression);
+    
+        for (String token : tokens) {
+            if (isNumeric(token)) {
+                operands.add(Double.parseDouble(token));
+            } else if (isOperator(token)) {
+                operator = token;
             }
+        }
+        if (operator != null) {
+            switch (operator) {
+                case "*":
+                    result = multiply(operands);
+                    break;
+                case "+":
+                    result = sum(operands);
+                    break;
+                case "-":
+                    result = subtract(operands);
+                    break;
+                case "/":
+                    result = divide(operands);
+                    break;
+                default:
+                    System.out.println("Operador no valido.");
+                    break;
+            }
+        } else {
+            System.out.println("No se encontro operador.");
+        }
+    
+        return result;
+    }
+    
+    private boolean isNumeric(String token) {
+        try {
+            Double.parseDouble(token);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    private boolean isOperator(String token) {
+        return "+".equals(token) || "-".equals(token) || "*".equals(token) || "/".equals(token);
+    }
+    
 
-            i++;
+    // Método para multiplicar los operandos
+    private double multiply(List<Object> operands) {
+        double result = 1.0;
+    
+        for (Object operand : operands) {
+            result *= (double) operand;
+        }
+    
+        return result;
+    }
+    
+    // Método para sumar los operandos
+    private double sum(List<Object> operands) {
+        double result = 0.0;
+    
+        for (Object operand : operands) {
+            result += (double) operand;
+        }
+    
+        return result;
+    }
+    
+    // Método para restar los operandos
+    private double subtract(List<Object> operands) {
+        double result = 0.0;
+    
+        for (int i = 0; i < operands.size(); i++) {
+            if (i == 0) {
+                result = (double) operands.get(i);
+            } else {
+                result -= (double) operands.get(i);
+            }
+        }
+    
+        return result;
+    }
+    
+    // Método para dividir los operandos
+    private double divide(List<Object> operands) {
+        double result = 0.0;
+    
+        for (int i = 0; i < operands.size(); i++) {
+            if (i == 0) {
+                result = (double) operands.get(i);
+            } else {
+                result /= (double) operands.get(i);
+            }
+        }
+    
+        return result;
+    }
+
+
+    public List<String> decodeExpression(String expression) {
+        List<String> tokens = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean isInsideString = false;
+
+        for (char c : expression.toCharArray()) {
+            if (c == ' ') {
+                if (!isInsideString && sb.length() > 0) {
+                    tokens.add(sb.toString());
+                    sb = new StringBuilder();
+                } else {
+                    sb.append(c);
+                }
+            } else if (c == '\"') {
+                sb.append(c);
+                isInsideString = !isInsideString;
+            } else if (c == '(' || c == ')') {
+                if (!isInsideString) {
+                    if (sb.length() > 0) {
+                        tokens.add(sb.toString());
+                        sb = new StringBuilder();
+                    }
+                    tokens.add(Character.toString(c));
+                } else {
+                    sb.append(c);
+                }
+            } else {
+                sb.append(c);
+            }
         }
 
-        return stack.pop();
+        if (sb.length() > 0) {
+            tokens.add(sb.toString());
+        }
+
+        return tokens;
     }
+    
 
     public static void setVariable(String name, Object value) {
         if (value instanceof Double) {
             variables.put(name, (Double) value);
         } else {
-            throw new IllegalArgumentException("El valor asignado a la variable debe ser un número");
+            throw new IllegalArgumentException("El valor asignado a la variable debe ser un numero");
         }
     }
 }
