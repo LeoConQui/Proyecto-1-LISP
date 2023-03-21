@@ -1,9 +1,12 @@
 import java.util.*;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
+
+/*
+ * @author: Sharis Barrios y Allan Paniagua
+ */
 
 public class FuncionesAri {
+    // Se crea un map para almacenar las variables
     private static Map<String, Object> variables;
 
     public Object evaluate(String expression) {
@@ -11,9 +14,10 @@ public class FuncionesAri {
         List<Object> operands = new ArrayList<>();
         String operator = null;
     
-        // decode the expression
+        // Se llama al decode Expression para verificar los tokens de la expresión Lisp
         List<String> tokens = decodeExpression(expression);
-    
+        
+        // Valida si el token es un valor numérico o un operador
         for (String token : tokens) {
             if (isNumeric(token)) {
                 operands.add(Double.parseDouble(token));
@@ -112,7 +116,7 @@ public class FuncionesAri {
         return result;
     }
 
-
+    // Método para decodificar la expresión y establecer que valores posee
     public List<String> decodeExpression(String expression) {
         List<String> tokens = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -151,7 +155,7 @@ public class FuncionesAri {
         return tokens;
     }
     
-
+    // Método para establecer variables
     public static void setVariable(String name, Object value) {
         if (value instanceof Double) {
             variables.put(name, (Double) value);

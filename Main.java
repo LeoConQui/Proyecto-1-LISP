@@ -1,14 +1,14 @@
-public class Main {
+/*
+ * @author: Sharis Barrios
+ * Clase Principal de interaccción con el usuario
+ */
 
+public class Main { 
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
-        FuncionesAri FA = new FuncionesAri();
-        double resultado1 = (double) FA.evaluate("(* 1 2)");
-        System.out.println(resultado1); // output: 2
-        
-        double resultado2 = (double) FA.evaluate("(* (+ 1 2 3) 5)");
-        System.out.println(resultado2); // output: 30
-
-        Lisp env = new Lisp();
+        Lisp env = new Lisp(); // Se crea un ambiente Lisp con el cual el usuario interactura 
         env.run();
     }
 
